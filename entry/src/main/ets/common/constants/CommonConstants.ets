@@ -167,4 +167,47 @@ export class CommonConstants {
   static readonly LIGHT_CELL_ICON: number = 18           // 独立控制格图标
   static readonly LIGHT_TOGGLE_WIDTH: number = 36        // 开关图元宽度（light_toggle_*，比例 1.78:1）
   static readonly LIGHT_TOGGLE_HEIGHT: number = 20       // 开关图元高度
+
+  // ==================== 窗帘控制页：暖金实景上的金色轻奢卡片 ====================
+  /** 背景压暗遮罩：顶部压暗保标题可读，中部留出暖金光晕，底部压暗衬托悬浮导航 */
+  static readonly COLOR_CURTAIN_SCRIM_TOP: string = 'rgba(38,25,10,0.62)'
+  static readonly COLOR_CURTAIN_SCRIM_MID: string = 'rgba(38,25,10,0.24)'
+  static readonly COLOR_CURTAIN_SCRIM_BOTTOM: string = 'rgba(38,25,10,0.70)'
+
+  /** 顶部「全部打开 / 全部关闭」胶囊：选中态用设计稿金色胶囊底图，未选中态沿用半透卡片材质 */
+  static readonly COLOR_CURTAIN_MODE_BORDER_OFF: string = 'rgba(255,244,214,0.26)'  // 未选中：弱金描边
+  static readonly OPACITY_CURTAIN_MODE_IDLE: number = 0.90                          // 未选中：图元与文字略降饱和
+  static readonly CURTAIN_MODE_BORDER_WIDTH_ON: number = 2                          // 选中：描边加粗（压住金色底图边缘）
+
+  /** 布帘 / 窗纱卡片与卡片内预览区 */
+  static readonly CURTAIN_STAGE_WIDTH_PCT: number = 76   // 预览区（帘体 + 窗帘杆）宽度占卡片内宽百分比
+  static readonly CURTAIN_ROD_RATIO: number = 19.3       // 窗帘杆图元宽高比（curtain_icon_top_bar 655:34）
+  static readonly CURTAIN_PANEL_CLOSED_PCT: number = 50  // 关闭态单侧帘宽（占预览区宽度）：两半在中间合拢
+  static readonly CURTAIN_PANEL_OPEN_PCT: number = 44    // 打开态单侧帘宽（占预览区宽度）：两半收向两侧留出中缝
+  static readonly CURTAIN_PANEL_SLIDE_PCT: number = 5    // 开合过程中帘体向外滑动位移（占预览区宽度）
+
+  // ==================== 窗帘控制页字号 ====================
+  static readonly FONT_CURTAIN_TITLE: number = 24        // 页面标题「窗帘控制」
+  static readonly FONT_CURTAIN_CARD_TITLE: number = 15   // 卡片标题「布帘」「窗纱」
+  static readonly FONT_CURTAIN_MODE: number = 14         // 顶部胶囊文案
+  static readonly FONT_CURTAIN_BTN: number = 12          // 打开 / 暂停 / 关闭 按钮文案
+
+  // ==================== 窗帘控制页尺寸（照第 4 屏设计稿等比换算，整屏不滚动）====================
+  static readonly CURTAIN_PAGE_PADDING: number = 18      // 页面左右安全间距（与灯光页一致）
+  static readonly CURTAIN_TOPBAR_HEIGHT: number = 44     // 顶部栏（返回 + 标题）高度（与灯光页一致）
+  static readonly CURTAIN_BACK_BOX: number = 32          // 返回按钮触摸区（背景透明，图元内缩约 20）
+  static readonly CURTAIN_BLOCK_GAP: number = 10         // 顶部栏 / 胶囊 / 卡片之间的纵向间距
+  static readonly CURTAIN_MODE_HEIGHT: number = 38       // 顶部胶囊高度
+  static readonly CURTAIN_MODE_ICON: number = 18         // 顶部胶囊图标
+  static readonly CURTAIN_CARD_RADIUS: number = 18       // 半透明卡片圆角（与灯光页一致）
+  static readonly CURTAIN_CARD_PADDING: number = 10      // 半透明卡片内边距
+  static readonly CURTAIN_CARD_TITLE_GAP: number = 6     // 卡片标题与预览区间距
+  static readonly CURTAIN_BTN_SIZE: number = 40          // 打开 / 暂停 / 关闭 圆形按钮直径
+  static readonly CURTAIN_BTN_ICON: number = 20          // 圆形按钮图标
+  static readonly CURTAIN_BTN_ROW_GAP: number = 8        // 按钮行与预览区间距
+  static readonly CURTAIN_BTN_LABEL_GAP: number = 4      // 圆形按钮与下方文案间距
+
+  // ==================== 窗帘开合动画 ====================
+  /** 开合动画时长：帘体缓缓移动，过渡丝滑（暂停后保持当前位置） */
+  static readonly CURTAIN_MOTION_DURATION: number = 1500
 }
