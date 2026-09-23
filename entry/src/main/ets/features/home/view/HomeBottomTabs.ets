@@ -2,9 +2,11 @@
  * 底部导航（子组件）：全 App 统一的四项导航 —— 首页 / 灯光 / 窗帘 / 服务
  * 形态：悬浮在页面最底部，左右不占满的圆角描边胶囊；Tabs 自带导航条高度置 0，由自绘导航条承担选中态
  * 选中态：暖白加粗文字 + 暖金图标（圆角描边）+ 微弱高亮底色；未选中态：浅灰白常规字重、无高亮
- * 内容：首页 TabContent 接入智慧客房首页、灯光 TabContent 接入灯光控制页；窗帘 / 服务暂为占位页
+ * 内容：首页 TabContent 接入智慧客房首页、灯光 TabContent 接入灯光控制页、
+ *       窗帘 TabContent 接入窗帘控制页；服务暂为占位页
  */
 import { CommonConstants } from '../../../common/constants/CommonConstants'
+import { CurtainPage } from '../../curtain/view/CurtainPage'
 import { LightPage } from '../../light/view/LightPage'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 
@@ -191,9 +193,13 @@ export struct HomeBottomTabs {
           })
         }
 
-        // 3. 窗帘（待接入）
+        // 3. 窗帘：窗帘控制页（本屏）；返回按钮切回首页
         TabContent() {
-          this.placeholderPage(2)
+          CurtainPage({
+            onBack: () => {
+              this.select(0)
+            }
+          })
         }
 
         // 4. 服务（待接入）

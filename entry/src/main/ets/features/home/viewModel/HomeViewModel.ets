@@ -48,11 +48,12 @@ export class HomeViewModel {
     SceneModeItem.of('warm', '温馨模式', $r('app.media.home_icon_warm'))
   ]
 
-  /** 底部导航四项：仅「灯光」有专用金色图标，其余三项暂无图标资源，仅展示文字占位 */
+  /** 底部导航四项：灯光 / 窗帘有金色图标，首页与服务暂无图标资源，仅展示文字占位 */
   readonly navTabs: NavTabItem[] = [
     NavTabItem.of('首页', undefined),
     NavTabItem.of('灯光', $r('app.media.light_icon_nav_light')),
-    NavTabItem.of('窗帘', undefined),
+    // 窗帘暂无专用导航图元，沿用窗帘页设计稿里的帘体图形（两片平铺帘，语义即「窗帘」）
+    NavTabItem.of('窗帘', $r('app.media.curtain_icon_close_all')),
     NavTabItem.of('服务', undefined)
   ]
 
