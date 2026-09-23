@@ -56,21 +56,19 @@ export class HomeDefaults {
   static readonly POWER_ON: boolean = true
   /** 快捷服务开关默认关闭 */
   static readonly QUICK_SERVICE_OFF: boolean = false
-  /** 无选中场景（默认四张卡全部未选中） */
-  static readonly NO_SCENE: string = ''
 }
 
 /**
  * 底部导航项数据（四项文案固定）
- * 图标当前复用已有图元：灯光→明亮、窗帘→窗帘图元、服务→清理图元，后续有专用图标直接替换即可
+ * 图标可选：当前仅「灯光」有专用金色图标，其余三项暂无图标资源，仅展示文字占位，后续补齐直接传入即可
  */
 export class NavTabItem {
   /** 导航文案 */
   label: string = ''
-  /** 导航图标 */
-  icon: Resource = $r('app.media.home_icon_airconditioner')
+  /** 导航图标：undefined 表示该项暂无图标资源，仅展示文字 */
+  icon: Resource | undefined = undefined
 
-  static of(label: string, icon: Resource): NavTabItem {
+  static of(label: string, icon: Resource | undefined): NavTabItem {
     const item: NavTabItem = new NavTabItem()
     item.label = label
     item.icon = icon

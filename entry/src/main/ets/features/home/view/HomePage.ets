@@ -5,6 +5,7 @@
  * 零业务逻辑：文案、默认值、交互状态全部取自 HomeViewModel，子组件各自独立封装
  */
 import { CommonConstants } from '../../../common/constants/CommonConstants'
+import { RoomStateStore } from '../../../common/state/RoomStateStore'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 import { AirConditionerCard } from './AirConditionerCard'
 import { HomeBottomTabs } from './HomeBottomTabs'
@@ -25,6 +26,8 @@ export struct HomePage {
   aboutToAppear(): void {
     // 读取登录页跳转参数并落地房号；未接收到参数（直接启动本页调试）时展示保底房号 2002
     this.viewModel.applyRouteParam(this.routeParam)
+    // 注入客房共享状态：场景卡与灯光控制页的胶囊、9 路开关双向同步
+    this.viewModel.attachRoomState(RoomStateStore.getShared())
   }
 
   // ==================== 背景层 ====================

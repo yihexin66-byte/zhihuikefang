@@ -3,6 +3,7 @@
  * 页面文案、默认值、选中/开关状态全部收敛在这里，View 只负责渲染与转发事件
  */
 import { Logger } from '../../../common/log/Logger'
+import { RoomStateStore } from '../../../common/state/RoomStateStore'
 import { HomeDefaults, HomeRouteParams, NavTabItem, SceneModeItem } from '../model/HomeModel'
 
 @ObservedV2
@@ -47,12 +48,12 @@ export class HomeViewModel {
     SceneModeItem.of('warm', '温馨模式', $r('app.media.home_icon_warm'))
   ]
 
-  /** 底部导航四项（图标暂复用已有图元，后续替换专用图标即可） */
+  /** 底部导航四项：仅「灯光」有专用金色图标，其余三项暂无图标资源，仅展示文字占位 */
   readonly navTabs: NavTabItem[] = [
-    NavTabItem.of('首页', $r('app.media.home_icon_airconditioner')),
-    NavTabItem.of('灯光', $r('app.media.home_icon_bright')),
-    NavTabItem.of('窗帘', $r('app.media.home_icon_night_left')),
-    NavTabItem.of('服务', $r('app.media.home_icon_clear'))
+    NavTabItem.of('首页', undefined),
+    NavTabItem.of('灯光', $r('app.media.light_icon_nav_light')),
+    NavTabItem.of('窗帘', undefined),
+    NavTabItem.of('服务', undefined)
   ]
 
   // ==================== 页面状态（@Trace：变更实时联动 UI）====================
@@ -62,8 +63,11 @@ export class HomeViewModel {
   @Trace powerOn: boolean = HomeDefaults.POWER_ON
   /** 设定温度 */
   @Trace setTemp: number = HomeDefaults.SET_TEMP
-  /** 当前选中的场景模式 id：空串表示四张卡全部未选中 */
-  @Trace selectedSceneId: string = HomeDefaults.NO_SCENE
+  /**
+   * 客房共享状态：默认自有实例（保证单测隔离）
+   * 页面 aboutToAppear 注入全局共享实例后，场景卡与灯光控制页的胶囊、9 路开关双向同步
+   */
+  roomState: RoomStateStore = new RoomStateStore()
   /** 请勿打扰 */
   @Trace dndOn: boolean = HomeDefaults.QUICK_SERVICE_OFF
   /** 清理房间 */
@@ -80,6 +84,14 @@ export class HomeViewModel {
   /** 房号展示：房号 XXXX */
   get roomText(): string {
     return `${this.roomPrefix} ${this.roomNo}`
+  }
+
+  /**
+   * 当前选中的场景模式 id：读取共享状态，与灯光控制页同名场景双向同步
+   * 空串表示四张卡全部未选中（含灯光页选中睡眠模式的情形）
+   */
+  get selectedSceneId(): string {
+    return this.roomState.selectedSceneId
   }
 
   /** 空调运行状态文案：随电源开关在 运行中 / 已关机 之间联动 */
@@ -108,6 +120,13 @@ export class HomeViewModel {
   }
 
   // ==================== 初始化 ====================
+
+  /**
+   * 注入客房共享状态：由页面传入全局唯一实例，实现与灯光控制页的双向同步
+   */
+  attachRoomState(store: RoomStateStore): void {
+    this.roomState = store
+  }
 
   /**
    * 读取路由参数并落地房号
@@ -166,11 +185,12 @@ export class HomeViewModel {
 
   /**
    * 场景模式单选互斥：点击未开启的卡即开启；再次点击已开启的卡则关闭
+   * 选中 / 取消均写入共享状态：灯光控制页同名胶囊实时联动，
+   * 并同步打开 / 关闭该场景对应的独立控制开关
    * @returns 本次操作的轻提示文案
    */
   toggleScene(id: string): string {
-    const opening: boolean = this.selectedSceneId !== id
-    this.selectedSceneId = opening ? id : HomeDefaults.NO_SCENE
+    const opening: boolean = this.roomState.toggleScene(id)
     const message: string = `${this.sceneLabelOf(id)}${opening ? this.tipOpened : this.tipClosed}`
     this.logger.info(message)
     return message

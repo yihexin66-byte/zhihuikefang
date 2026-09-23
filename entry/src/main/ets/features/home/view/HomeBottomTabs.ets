@@ -2,17 +2,20 @@
  * 底部导航（子组件）：全 App 统一的四项导航 —— 首页 / 灯光 / 窗帘 / 服务
  * 形态：悬浮在页面最底部，左右不占满的圆角描边胶囊；Tabs 自带导航条高度置 0，由自绘导航条承担选中态
  * 选中态：暖白加粗文字 + 暖金图标（圆角描边）+ 微弱高亮底色；未选中态：浅灰白常规字重、无高亮
- * 灯光 / 窗帘 / 服务三个 TabContent 暂为占位页，后续接入真实页面时替换 placeholderPage 即可
+ * 内容：首页 TabContent 接入智慧客房首页、灯光 TabContent 接入灯光控制页；窗帘 / 服务暂为占位页
  */
 import { CommonConstants } from '../../../common/constants/CommonConstants'
+import { LightPage } from '../../light/view/LightPage'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 
 /**
- * 单个导航项：图标 + 文字，选中 / 未选中两套配色
+ * 单个导航项：图标（可选）+ 文字，选中 / 未选中两套配色
+ * 暂无图标资源的项仅展示文字，后续补齐图标直接传入即可
  */
 @ComponentV2
 struct NavTabButton {
-  @Require @Param icon: Resource
+  /** 导航图标：undefined 表示该项暂无图标资源，仅展示文字占位 */
+  @Param icon: Resource | undefined = undefined
   @Require @Param label: string
   @Require @Param selected: boolean
   /** 点击回调：仅转发，选中态由 ViewModel 持有 */
@@ -20,21 +23,23 @@ struct NavTabButton {
 
   build() {
     Column() {
-      // 图标：选中暖金（保留原色），未选中转为浅灰白
-      Image(this.icon)
-        .width(CommonConstants.ICON_TAB)
-        .height(CommonConstants.ICON_TAB)
-        .objectFit(ImageFit.Contain)
-        .padding(2)
-        .borderRadius(9)
-        .border({
-          width: 1,
-          color: this.selected
-            ? CommonConstants.COLOR_TAB_ICON_BORDER
-            : CommonConstants.COLOR_TAB_ICON_BORDER_IDLE
-        })
-        .grayscale(this.selected ? 0 : 1)
-        .brightness(this.selected ? 1 : 1.2)
+      // 图标：选中暖金（保留原色），未选中转为浅灰白；无图标的项不渲染
+      if (this.icon !== undefined) {
+        Image(this.icon)
+          .width(CommonConstants.ICON_TAB)
+          .height(CommonConstants.ICON_TAB)
+          .objectFit(ImageFit.Contain)
+          .padding(2)
+          .borderRadius(9)
+          .border({
+            width: 1,
+            color: this.selected
+              ? CommonConstants.COLOR_TAB_ICON_BORDER
+              : CommonConstants.COLOR_TAB_ICON_BORDER_IDLE
+          })
+          .grayscale(this.selected ? 0 : 1)
+          .brightness(this.selected ? 1 : 1.2)
+      }
 
       // 文字：选中暖白加粗，未选中浅灰白常规
       Text(this.label)
@@ -61,7 +66,7 @@ struct NavTabButton {
 @ComponentV2
 export struct HomeBottomTabs {
   @Require @Param viewModel: HomeViewModel
-  /** 首页 Tab 的内容插槽：由 HomePage 注入（把页面内容与导航壳解耦，便于三个页面陆续接入） */
+  /** 首页 Tab 的内容插槽：由 HomePage 注入（把页面内容与导航壳解耦，便于各页面陆续接入） */
   @BuilderParam homeContent: () => void = this.emptyContent
 
   private tabsController: TabsController = new TabsController()
@@ -177,9 +182,13 @@ export struct HomeBottomTabs {
           this.homeContent()
         }
 
-        // 2. 灯光（待接入）
+        // 2. 灯光：灯光控制页（本屏）；返回按钮切回首页
         TabContent() {
-          this.placeholderPage(1)
+          LightPage({
+            onBack: () => {
+              this.select(0)
+            }
+          })
         }
 
         // 3. 窗帘（待接入）

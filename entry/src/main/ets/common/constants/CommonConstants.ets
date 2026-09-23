@@ -113,4 +113,58 @@ export class CommonConstants {
   static readonly TABBAR_SIDE_MARGIN: number = 18    // 导航条左右留白（不占满）
   static readonly TABBAR_BOTTOM_MARGIN: number = 8   // 导航条距屏幕底部
   static readonly HOME_BOTTOM_CLEARANCE: number = 76 // 内容区避让悬浮导航的底部留白
+
+  // ==================== 灯光控制页：暖金实景上的金色轻奢控件 ====================
+  /** 背景压暗遮罩：顶部压暗保标题可读，中部留出暖金光晕，底部压暗衬托悬浮导航 */
+  static readonly COLOR_LIGHT_SCRIM_TOP: string = 'rgba(38,25,10,0.64)'
+  static readonly COLOR_LIGHT_SCRIM_MID: string = 'rgba(38,25,10,0.30)'
+  static readonly COLOR_LIGHT_SCRIM_BOTTOM: string = 'rgba(38,25,10,0.72)'
+
+  /** 总开关：开启金色发光，关闭低饱和置灰 */
+  static readonly COLOR_SWITCH_GLOW: string = 'rgba(239,216,148,0.80)'   // 开启态金色光晕
+  static readonly SWITCH_GLOW_RADIUS: number = 28                        // 光晕半径
+  static readonly SWITCH_GLOW_RADIUS_OFF: number = 0                     // 关闭态无光晕
+  static readonly OPACITY_SWITCH_OFF: number = 0.55                      // 关闭态整体压暗
+
+  /** 半透明卡片（场景模式 / 独立控制两个分区容器） */
+  static readonly COLOR_LIGHT_CARD_BG: string = 'rgba(38,27,12,0.46)'            // 卡片底
+  static readonly COLOR_LIGHT_CARD_BORDER: string = 'rgba(239,216,148,0.24)'     // 金色描边
+
+  /** 开启 / 选中态的淡金高亮（独立控制格、首页场景卡共用） */
+  static readonly COLOR_GOLD_HIGHLIGHT: string = 'rgba(239,216,148,0.16)'
+  static readonly COLOR_GOLD_BORDER_ON: string = 'rgba(239,216,148,0.52)'
+  static readonly OPACITY_CONTROL_ICON_IDLE: number = 0.72               // 关闭态图标透明度
+
+  /** 场景胶囊：淡金底 + 选中提亮描边（金字底压深色文字，保证对比度） */
+  static readonly COLOR_CAPSULE_BORDER_ON: string = 'rgba(255,244,214,0.95)'  // 选中：亮金描边
+  static readonly COLOR_CAPSULE_BORDER_OFF: string = 'rgba(255,244,214,0.26)' // 未选中：弱金描边
+  static readonly OPACITY_CAPSULE_IDLE: number = 0.88                          // 未选中：淡金略降饱和
+  static readonly BRIGHTNESS_CAPSULE_ON: number = 1.12                         // 选中：提亮
+  static readonly BRIGHTNESS_CAPSULE_OFF: number = 0.94                        // 未选中：略压
+  static readonly CAPSULE_GLOW_RADIUS: number = 14                             // 选中：金色光晕半径
+  static readonly CAPSULE_BORDER_WIDTH_ON: number = 2                          // 选中：描边加粗
+  static readonly BRIGHTNESS_SCENE_CARD_ON: number = 1.14                      // 首页场景卡选中提亮
+  static readonly SCENE_CARD_BORDER_WIDTH_ON: number = 2                       // 首页场景卡选中描边加粗
+
+  // ==================== 灯光控制页字号 ====================
+  static readonly FONT_LIGHT_TITLE: number = 24          // 页面标题「灯光控制」
+  static readonly FONT_LIGHT_SWITCH_LABEL: number = 13   // 总开关名称「总开关」
+  static readonly FONT_LIGHT_CELL: number = 13           // 独立控制格内名称
+  static readonly FONT_LIGHT_CAPSULE: number = 13        // 场景胶囊文案
+
+  // ==================== 灯光控制页尺寸（照第 3 屏设计稿等比换算，整屏不滚动）====================
+  static readonly LIGHT_PAGE_PADDING: number = 18        // 页面左右安全间距（设计稿 18）
+  static readonly LIGHT_TOPBAR_HEIGHT: number = 44       // 顶部栏（返回 + 标题）高度
+  static readonly LIGHT_BACK_BOX: number = 32            // 返回按钮触摸区（背景透明，图元内缩约 20）
+  static readonly LIGHT_MAIN_SWITCH: number = 100        // 总开关图片尺寸
+  static readonly LIGHT_CARD_RADIUS: number = 18         // 半透卡片圆角
+  static readonly LIGHT_CARD_PADDING: number = 12        // 半透卡片内边距
+  static readonly LIGHT_CARD_TITLE_GAP: number = 8       // 卡片标题与首行间距
+  static readonly LIGHT_CAPSULE_HEIGHT: number = 36      // 场景胶囊高度
+  static readonly LIGHT_CELL_HEIGHT: number = 36         // 独立控制格行高（与胶囊同高，网格工整）
+  static readonly LIGHT_CAPSULE_ICON: number = 16        // 场景胶囊图标
+  static readonly LIGHT_GRID_GAP: number = 8             // 网格横纵间距（胶囊与开关格共用）
+  static readonly LIGHT_CELL_ICON: number = 18           // 独立控制格图标
+  static readonly LIGHT_TOGGLE_WIDTH: number = 36        // 开关图元宽度（light_toggle_*，比例 1.78:1）
+  static readonly LIGHT_TOGGLE_HEIGHT: number = 20       // 开关图元高度
 }
