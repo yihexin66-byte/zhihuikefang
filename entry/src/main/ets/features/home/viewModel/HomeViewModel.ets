@@ -3,6 +3,7 @@
  * 页面文案、默认值、选中/开关状态全部收敛在这里，View 只负责渲染与转发事件
  */
 import { Logger } from '../../../common/log/Logger'
+import { RoomServiceStore } from '../../../common/state/RoomServiceStore'
 import { RoomStateStore } from '../../../common/state/RoomStateStore'
 import { HomeDefaults, HomeRouteParams, NavTabItem, SceneModeItem } from '../model/HomeModel'
 
@@ -36,8 +37,6 @@ export class HomeViewModel {
   /** 晚安模式轻提示（固定文案，开启与关闭各一条） */
   readonly nightModeOnTip: string = '晚安模式已开启，已关闭所有灯光'
   readonly nightModeOffTip: string = '晚安模式已关闭'
-  /** 占位页文案：后续三个页面接入前的过渡态 */
-  readonly underDevelopment: string = '页面开发中'
 
   // ==================== 固定数据（需求锁定）====================
   /** 场景模式四张卡：明亮 / 柔和 / 阅读 / 温馨 */
@@ -69,10 +68,11 @@ export class HomeViewModel {
    * 页面 aboutToAppear 注入全局共享实例后，场景卡与灯光控制页的胶囊、9 路开关双向同步
    */
   roomState: RoomStateStore = new RoomStateStore()
-  /** 请勿打扰 */
-  @Trace dndOn: boolean = HomeDefaults.QUICK_SERVICE_OFF
-  /** 清理房间 */
-  @Trace cleanOn: boolean = HomeDefaults.QUICK_SERVICE_OFF
+  /**
+   * 客房服务共享状态：默认自有实例（保证单测隔离）
+   * 页面 aboutToAppear 注入全局共享实例后，快捷服务两项开关与服务控制页的开关双向同步
+   */
+  serviceState: RoomServiceStore = new RoomServiceStore()
   /** 晚安模式开关 */
   @Trace nightOn: boolean = HomeDefaults.QUICK_SERVICE_OFF
   /** 底部导航当前项：默认首页 */
@@ -93,6 +93,21 @@ export class HomeViewModel {
    */
   get selectedSceneId(): string {
     return this.roomState.selectedSceneId
+  }
+
+  /**
+   * 请勿打扰开关：读取服务共享状态，与服务控制页同名开关双向同步
+   * 开启时首页快捷服务卡点亮，关闭时恢复常亮底
+   */
+  get dndOn(): boolean {
+    return this.serviceState.doNotDisturbOn
+  }
+
+  /**
+   * 清理房间开关：同上
+   */
+  get cleanOn(): boolean {
+    return this.serviceState.cleanRoomOn
   }
 
   /** 空调运行状态文案：随电源开关在 运行中 / 已关机 之间联动 */
@@ -127,6 +142,13 @@ export class HomeViewModel {
    */
   attachRoomState(store: RoomStateStore): void {
     this.roomState = store
+  }
+
+  /**
+   * 注入客房服务共享状态：由页面传入全局唯一实例，实现与服务控制页开关的双向同步
+   */
+  attachServiceState(store: RoomServiceStore): void {
+    this.serviceState = store
   }
 
   /**
@@ -182,7 +204,8 @@ export class HomeViewModel {
   }
 
   // ==================== 场景模式 / 快捷服务 / 晚安模式 ====================
-  // 三处卡片均为鎏金渐变常亮、不再区分选中态，开关状态一律由轻提示文案反馈
+  // 场景卡与晚安横幅均为鎏金渐变常亮，开关状态由轻提示文案反馈；
+  // 快捷服务卡额外承担与服务控制页的同步展示：开启时点亮、关闭时恢复常亮底
 
   /**
    * 场景模式单选互斥：点击未开启的卡即开启；再次点击已开启的卡则关闭
@@ -210,23 +233,25 @@ export class HomeViewModel {
   }
 
   /**
-   * 请勿打扰开关
+   * 请勿打扰开关：状态写入服务共享状态，服务控制页对应开关同步切换
    * @returns 本次操作的轻提示文案
    */
   toggleDnd(): string {
-    this.dndOn = !this.dndOn
-    const message: string = `${this.dndLabel}${this.dndOn ? this.tipOpened : this.tipClosed}`
+    const target: boolean = !this.serviceState.doNotDisturbOn
+    this.serviceState.setDoNotDisturb(target)
+    const message: string = `${this.dndLabel}${target ? this.tipOpened : this.tipClosed}`
     this.logger.info(message)
     return message
   }
 
   /**
-   * 清理房间开关
+   * 清理房间开关：状态写入服务共享状态，服务控制页对应开关同步切换
    * @returns 本次操作的轻提示文案
    */
   toggleClean(): string {
-    this.cleanOn = !this.cleanOn
-    const message: string = `${this.cleanLabel}${this.cleanOn ? this.tipOpened : this.tipClosed}`
+    const target: boolean = !this.serviceState.cleanRoomOn
+    this.serviceState.setCleanRoom(target)
+    const message: string = `${this.cleanLabel}${target ? this.tipOpened : this.tipClosed}`
     this.logger.info(message)
     return message
   }

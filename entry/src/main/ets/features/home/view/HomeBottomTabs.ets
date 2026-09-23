@@ -2,12 +2,12 @@
  * 底部导航（子组件）：全 App 统一的四项导航 —— 首页 / 灯光 / 窗帘 / 服务
  * 形态：悬浮在页面最底部，左右不占满的圆角描边胶囊；Tabs 自带导航条高度置 0，由自绘导航条承担选中态
  * 选中态：暖白加粗文字 + 暖金图标（圆角描边）+ 微弱高亮底色；未选中态：浅灰白常规字重、无高亮
- * 内容：首页 TabContent 接入智慧客房首页、灯光 TabContent 接入灯光控制页、
- *       窗帘 TabContent 接入窗帘控制页；服务暂为占位页
+ * 内容：首页 / 灯光 / 窗帘 / 服务 四个 TabContent 分别接入四个主页面
  */
 import { CommonConstants } from '../../../common/constants/CommonConstants'
 import { CurtainPage } from '../../curtain/view/CurtainPage'
 import { LightPage } from '../../light/view/LightPage'
+import { ServicePage } from '../../service/view/ServicePage'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 
 /**
@@ -146,36 +146,6 @@ export struct HomeBottomTabs {
     })
   }
 
-  /**
-   * 占位页：居中展示对应名称 + 页面开发中
-   */
-  @Builder
-  placeholderPage(index: number) {
-    Column() {
-      Text(this.viewModel.navTabs[index].label)
-        .fontSize(CommonConstants.FONT_TITLE)
-        .fontWeight(FontWeight.Medium)
-        .fontColor(CommonConstants.COLOR_TEXT_MAIN)
-        .letterSpacing(CommonConstants.LETTER_SPACING_TITLE)
-
-      Divider()
-        .width(46)
-        .strokeWidth(2)
-        .color(CommonConstants.COLOR_GOLD)
-        .margin({ top: CommonConstants.SPACE_M, bottom: CommonConstants.SPACE_M })
-
-      Text(this.viewModel.underDevelopment)
-        .fontSize(CommonConstants.FONT_SUBTITLE)
-        .fontColor(CommonConstants.COLOR_TEXT_HINT)
-        .letterSpacing(CommonConstants.LETTER_SPACING_SUBTITLE)
-    }
-    .width('100%')
-    .height('100%')
-    .padding({ bottom: CommonConstants.HOME_BOTTOM_CLEARANCE })
-    .alignItems(HorizontalAlign.Center)
-    .justifyContent(FlexAlign.Center)
-  }
-
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       Tabs({ barPosition: BarPosition.End, controller: this.tabsController }) {
@@ -204,7 +174,11 @@ export struct HomeBottomTabs {
 
         // 4. 服务（待接入）
         TabContent() {
-          this.placeholderPage(3)
+          ServicePage({
+            onBack: () => {
+              this.select(0)
+            }
+          })
         }
       }
       // 隐藏 Tabs 自带导航条，改由下方自绘悬浮导航条承担
