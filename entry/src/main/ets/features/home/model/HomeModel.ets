@@ -22,7 +22,7 @@ export class HomeRouteParams {
  * 图标在模型层以资源引用声明，View 只负责渲染，后续可由服务端下发替换
  */
 export class SceneModeItem {
-  /** 唯一标识：选中态判定的依据 */
+  /** 唯一标识：单选状态与开启 / 关闭轻提示的判定依据 */
   id: string = ''
   /** 卡片文案 */
   label: string = ''

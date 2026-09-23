@@ -8,8 +8,6 @@ import { HomeDefaults, HomeRouteParams, NavTabItem, SceneModeItem } from '../mod
 @ObservedV2
 export class HomeViewModel {
   // ==================== 页面文案（固定，一字不改）====================
-  /** 标题「智慧客房」字号标识（图形资源，此处保留无障碍/占位文案） */
-  readonly brandLabel: string = '智慧客房'
   /** 右上角标签 */
   readonly testTag: string = '开始测试'
   /** 问候语前缀：与房号组合为「欢迎回家，房号 XXXX」 */

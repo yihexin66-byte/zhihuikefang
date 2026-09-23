@@ -13,14 +13,12 @@ struct AppNavigation {
 
   /**
    * 应用级路由注册表
-   * LOGIN：首屏内容页（其自身根容器即 NavDestination）
+   * 首屏为登录入住页，直接作为 Navigation 的内容页（栈空时展示），不经此表
    * HOME：智慧客房控制首页，路由参数为 HomeRouteParams（携带房号）
    */
   @Builder
   RootRouter(name: string, param: Object) {
-    if (name === RouteConstants.LOGIN) {
-      LoginPage()
-    } else if (name === RouteConstants.HOME) {
+    if (name === RouteConstants.HOME) {
       // 房号经 param 传入，由 HomePage 在 aboutToAppear 中解析（未传时保底 2002）
       HomePage({ routeParam: param })
     }

@@ -29,9 +29,7 @@ export struct LoginPage {
       return
     }
     // 客房首页已接入：携带房号跳转，首页在 aboutToAppear 中读取并展示「房号 XXXX」
-    if (this.viewModel.homeReady) {
-      this.pageStack.pushPathByName(RouteConstants.HOME, HomeRouteParams.of(this.viewModel.roomNo))
-    }
+    this.pageStack.pushPathByName(RouteConstants.HOME, HomeRouteParams.of(this.viewModel.roomNo))
   }
 
   /**
@@ -136,7 +134,7 @@ export struct LoginPage {
         .layoutWeight(1)
         .onChange((value: string) => {
           // 事件只转发：状态变更交给 ViewModel
-          this.viewModel.roomNo = value
+          this.viewModel.setRoomNo(value)
         })
     }
     .width('100%')
@@ -174,7 +172,7 @@ export struct LoginPage {
         .layoutWeight(1)
         .onChange((value: string) => {
           // 事件只转发：状态变更交给 ViewModel
-          this.viewModel.account = value
+          this.viewModel.setAccount(value)
         })
     }
     .width('100%')

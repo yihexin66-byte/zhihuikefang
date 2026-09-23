@@ -3,7 +3,6 @@
  * 页面文案、默认值、跳转决策全部收敛在这里，View 只负责渲染与转发事件
  */
 import { Logger } from '../../../common/log/Logger'
-import { RouteConstants } from '../../../common/constants/RouteConstants'
 import { LoginDefaults } from '../model/LoginModel'
 
 @ObservedV2
@@ -28,13 +27,23 @@ export class LoginViewModel {
   /** 最近一次操作提示（校验失败原因 / 入住欢迎语），由 View 决定如何呈现 */
   @Trace tipMessage: string = ''
 
-  /**
-   * 客房主页（第 2 屏）是否已接入：
-   * RouteConstants.HOME_READY 置 true 后，「立即入住」即真正跳转
-   */
-  readonly homeReady: boolean = RouteConstants.HOME_READY
-
   private logger: Logger = new Logger('[LoginViewModel]')
+
+  // ==================== 输入回填（View 的 onChange 只转发，状态由本层持有）====================
+
+  /**
+   * 房号输入回填
+   */
+  setRoomNo(value: string): void {
+    this.roomNo = value
+  }
+
+  /**
+   * 用户账号输入回填
+   */
+  setAccount(value: string): void {
+    this.account = value
+  }
 
   /**
    * 切换「记住我的信息」勾选状态
