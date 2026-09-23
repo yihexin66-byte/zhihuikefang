@@ -1,6 +1,6 @@
 /**
  * 快捷服务（子组件）：请勿打扰 / 清理房间 两张圆角金色卡片 + 晚安模式通栏横幅
- * 视觉：三处卡片均为鎏金渐变常亮，不再区分选中态
+ * 视觉：三处卡片均为鎏金渐变常亮；快捷服务两项开启时提亮并加亮金描边（与服务控制页开关同步）
  * 交互：每次点击弹出开启 / 关闭轻提示（不做真实设备控制）
  */
 import { BusinessError } from '@kit.BasicServicesKit'
@@ -8,22 +8,26 @@ import { CommonConstants } from '../../../common/constants/CommonConstants'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 
 /**
- * 服务卡：鎏金渐变常亮底 + 图标 + 文案
+ * 服务卡：鎏金渐变底 + 图标 + 文案
+ * 开启态（与服务控制页开关同步）提亮并加亮金描边，关闭态保持常亮原样
  */
 @ComponentV2
 struct QuickServiceCard {
   @Require @Param icon: Resource
   @Require @Param label: string
+  /** 开启态：与服务控制页同名开关共享同一份状态 */
+  @Require @Param active: boolean
   /** 点击回调：仅转发，状态与轻提示文案由上层处理 */
   @Event onToggle: () => void = () => {}
 
   build() {
     Stack() {
-      // 鎏金渐变常亮底
+      // 鎏金渐变常亮底：开启再提亮一档（与场景卡选中态同一处理）
       Image($r('app.media.home_layer_scenemode'))
         .width('100%')
         .height('100%')
         .objectFit(ImageFit.Cover)
+        .brightness(this.active ? CommonConstants.BRIGHTNESS_SCENE_CARD_ON : 1)
 
       Row({ space: CommonConstants.SPACE_XS }) {
         Image(this.icon)
@@ -45,7 +49,12 @@ struct QuickServiceCard {
     .layoutWeight(1)
     .height(CommonConstants.QUICK_CARD_HEIGHT)
     .borderRadius(CommonConstants.FIELD_RADIUS)
-    .border({ width: 1, color: CommonConstants.COLOR_GOLD_CARD_RIM })
+    .border({
+      width: this.active ? CommonConstants.SCENE_CARD_BORDER_WIDTH_ON : 1,
+      color: this.active
+        ? CommonConstants.COLOR_CAPSULE_BORDER_ON
+        : CommonConstants.COLOR_GOLD_CARD_RIM
+    })
     .clip(true)
     .onClick(() => {
       this.onToggle()
@@ -144,10 +153,12 @@ export struct QuickServiceSection {
       this.sectionHeader()
 
       // 两张服务卡：请勿打扰（月亮） / 清理房间（扫帚）
+      // 开启态直接取自共享状态：服务控制页开启任一项时此处同步点亮
       Row({ space: CommonConstants.SPACE_XS }) {
         QuickServiceCard({
           icon: $r('app.media.home_icon_night_right'),
           label: this.viewModel.dndLabel,
+          active: this.viewModel.dndOn,
           onToggle: () => {
             this.showTip(this.viewModel.toggleDnd())
           }
@@ -156,6 +167,7 @@ export struct QuickServiceSection {
         QuickServiceCard({
           icon: $r('app.media.home_icon_clear'),
           label: this.viewModel.cleanLabel,
+          active: this.viewModel.cleanOn,
           onToggle: () => {
             this.showTip(this.viewModel.toggleClean())
           }

@@ -210,4 +210,53 @@ export class CommonConstants {
   // ==================== 窗帘开合动画 ====================
   /** 开合动画时长：帘体缓缓移动，过渡丝滑（暂停后保持当前位置） */
   static readonly CURTAIN_MOTION_DURATION: number = 1500
+
+  // ==================== 服务控制页：暖金实景上的淡金服务卡 ====================
+  /** 背景压暗遮罩：顶部压暗保标题可读，中部留出暖金光晕，底部压暗衬托悬浮导航 */
+  static readonly COLOR_SERVICE_SCRIM_TOP: string = 'rgba(38,25,10,0.58)'
+  static readonly COLOR_SERVICE_SCRIM_MID: string = 'rgba(38,25,10,0.24)'
+  static readonly COLOR_SERVICE_SCRIM_BOTTOM: string = 'rgba(38,25,10,0.68)'
+
+  /**
+   * 淡金服务卡内容色：卡底取自设计稿淡金圆角方形底图，卡上图标与文字转深色保证对比度
+   * （沿用登录页主按钮、窗帘页选中按钮的「金底深色字」规范）
+   */
+  static readonly COLOR_SERVICE_CARD_CONTENT: string = '#3B2E14'
+
+  /**
+   * 服务开关轨道：沿用设计稿「半透明叠色」的做法，但把白色换成暖深色
+   * 原因：淡金卡底（#D6B072）上白色轨道仅 1.24:1、白色滑块压在白轨道上仅 1.65:1，均无法辨识；
+   * 换用暖深色后关闭态 1.68:1（凹槽感）、开启态 3.03:1（明显点亮），白色滑块对比度 3.4:1 / 6.2:1
+   */
+  static readonly COLOR_SERVICE_TOGGLE_OFF: string = 'rgba(58,44,20,0.32)'
+  static readonly COLOR_SERVICE_TOGGLE_ON: string = '#7A5C2E'
+
+  // ==================== 服务控制页字号 ====================
+  static readonly FONT_SERVICE_TITLE: number = 24        // 页面标题「服务控制」（与灯光 / 窗帘页同级）
+  static readonly FONT_SERVICE_CARD_TITLE: number = 16   // 服务卡文案「请勿打扰」「清理房间」
+
+  // ==================== 服务控制页尺寸（照第 5 屏设计稿等比换算，整屏不滚动）====================
+  static readonly SERVICE_PAGE_PADDING: number = 18      // 页面左右安全间距（与灯光 / 窗帘页一致）
+  static readonly SERVICE_TOPBAR_HEIGHT: number = 44     // 顶部栏（返回 + 标题）高度（与灯光 / 窗帘页一致）
+  static readonly SERVICE_BACK_BOX: number = 32          // 返回按钮触摸区（背景透明，图元内缩约 20）
+  static readonly SERVICE_BLOCK_GAP: number = 12         // 顶部栏 / 服务卡 / SOS / 退出登录之间的纵向间距
+  static readonly SERVICE_CARD_GAP: number = 12          // 两张服务卡之间的横向间距
+  static readonly SERVICE_CARD_RATIO: number = 0.92      // 服务卡宽高比（设计稿 579:629）：高度随宽度等比自适应
+  static readonly SERVICE_CARD_PADDING: number = 14      // 服务卡内边距
+  static readonly SERVICE_CARD_ICON_PCT: number = 26     // 服务卡图标宽度占卡片宽度百分比
+  static readonly SERVICE_CARD_SPACE: number = 12        // 服务卡内图标 / 文案 / 开关的间距
+
+  /** 服务开关图元：设计稿 196:103 轨道 + 87:87 滑块，按同一比例等比缩放 */
+  static readonly SERVICE_TOGGLE_WIDTH: number = 52      // 开关宽度
+  static readonly SERVICE_TOGGLE_HEIGHT: number = 27     // 开关高度
+  static readonly SERVICE_TOGGLE_RADIUS: number = 13.5   // 开关圆角（胶囊，取高度一半）
+  static readonly SERVICE_TOGGLE_KNOB: number = 23       // 滑块直径（占轨道高度 84.5%，与设计稿一致）
+  static readonly SERVICE_TOGGLE_KNOB_OFF_X: number = 2  // 关闭态滑块横坐标（居左，留白与纵向一致）
+  static readonly SERVICE_TOGGLE_KNOB_ON_X: number = 27  // 开启态滑块横坐标（居右，左右留白对称）
+  static readonly SERVICE_TOGGLE_KNOB_Y: number = 2      // 滑块纵坐标（轨道内垂直居中）
+  static readonly SERVICE_TOGGLE_MOTION: number = 180    // 滑块滑动时长
+
+  static readonly SERVICE_SOS_RATIO: number = 2.68       // SOS 卡片宽高比（设计稿 1210:451）
+  static readonly SERVICE_LOGOUT_WIDTH_PCT: number = 60  // 退出登录胶囊宽度占内容宽度百分比
+  static readonly SERVICE_LOGOUT_RATIO: number = 3.76    // 退出登录胶囊宽高比（设计稿 1210:322）
 }
