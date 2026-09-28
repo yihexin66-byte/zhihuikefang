@@ -3,8 +3,9 @@
  * 容器：深色半透明圆角卡片配金色描边（与灯光页、首页同一套材质常量）
  * 预览：窗帘杆 + 左右两半帘体；关闭态两半在中间合拢，打开态两半收向两侧留出中缝
  *
- * 开合动画：两张状态图同位置交叉淡入淡出，同时整组帘体随进度向外滑动 —— 进度由 ViewModel
- * 逐帧推进，暂停即停止推进，帘体停在当前位置（不落到两端）。
+ * 开合动画：两张状态图同位置交叉淡入淡出 —— 进度由 ViewModel 逐帧推进，暂停即停止推进，
+ * 帘体停在当前位置（不落到两端）。两侧帘体全程贴住预览区外沿、不做横向位移，
+ * 因此帘体外侧与上方窗帘杆的两端始终对齐，打开后也不会超出台杆。
  * 尺寸：预览区宽度按卡片内宽的百分比给定，帘体高度吃掉卡片剩余空间，因此不同机型
  * 均无需硬编码像素，也不会溢出。
  */
@@ -70,19 +71,9 @@ export struct CurtainDeviceCard {
   @Require @Param device: CurtainDevice
 
   /**
-   * 帘体向外滑动位移（占预览区宽度的百分比）：进度越大越靠外
-   * 收拢动作因此带上一段横向位移，比单纯淡入淡出更接近真实帘体
-   */
-  private slideOffset(): string {
-    const percent: number =
-      this.device.progress * CommonConstants.CURTAIN_PANEL_SLIDE_PCT
-    return `${percent}%`
-  }
-
-  /**
    * 单侧帘体：关闭态与打开态两张图放在同一盒内交叉过渡
    * 两张图都用 ImageFit.Fill 铺满同一高度，保证合拢时两半在中间严丝合缝、打开时中缝居中
-   * @param sideStart true = 左半（靠左对齐、向左滑出）；false = 右半（靠右对齐、向右滑出）
+   * @param sideStart true = 左半（靠预览区左沿对齐）；false = 右半（靠预览区右沿对齐）
    */
   @Builder
   panelHalf(sideStart: boolean) {
@@ -103,8 +94,6 @@ export struct CurtainDeviceCard {
     }
     .width('100%')
     .height('100%')
-    // 左半负向、右半正向：两侧同时向外滑动
-    .translate({ x: sideStart ? `-${this.slideOffset()}` : this.slideOffset() })
   }
 
   /**

@@ -192,7 +192,6 @@ export class CommonConstants {
   static readonly CURTAIN_ROD_RATIO: number = 19.3       // 窗帘杆图元宽高比（curtain_icon_top_bar 655:34）
   static readonly CURTAIN_PANEL_CLOSED_PCT: number = 50  // 关闭态单侧帘宽（占预览区宽度）：两半在中间合拢
   static readonly CURTAIN_PANEL_OPEN_PCT: number = 44    // 打开态单侧帘宽（占预览区宽度）：两半收向两侧留出中缝
-  static readonly CURTAIN_PANEL_SLIDE_PCT: number = 5    // 开合过程中帘体向外滑动位移（占预览区宽度）
 
   // ==================== 窗帘控制页字号 ====================
   static readonly FONT_CURTAIN_TITLE: number = 24        // 页面标题「窗帘控制」
