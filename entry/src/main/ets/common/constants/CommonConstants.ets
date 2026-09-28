@@ -76,14 +76,19 @@ export class CommonConstants {
   static readonly COLOR_TAG_BG_OFF: string = 'rgba(255,255,255,0.08)'
   static readonly COLOR_TAG_BORDER_OFF: string = 'rgba(255,255,255,0.20)'
 
-  /** 底部悬浮导航：圆角描边胶囊，左右不占满 */
+  /**
+   * 底部悬浮导航：圆角描边胶囊，左右不占满
+   * 选中态 = 金色胶囊 + 白色图标 + 暖白文字；未选中态 = 图标与文字同为 55% 白，尺寸不变，
+   * 两者仅靠胶囊底色区分（不做缩放、不加描边）
+   */
   static readonly COLOR_TABBAR_BG: string = 'rgba(28,19,8,0.84)'                 // 导航条底
   static readonly COLOR_TABBAR_BORDER: string = 'rgba(239,216,148,0.24)'         // 导航条描边
-  static readonly COLOR_TAB_TEXT_ACTIVE: string = '#FFF7E8'                      // 选中：暖白
-  static readonly COLOR_TAB_TEXT_IDLE: string = 'rgba(255,255,255,0.58)'         // 未选中：浅灰白
-  static readonly COLOR_TAB_HIGHLIGHT: string = 'rgba(239,216,148,0.14)'         // 选中：微弱高亮底
-  static readonly COLOR_TAB_ICON_BORDER: string = 'rgba(239,216,148,0.70)'       // 选中：图标圆角描边
-  static readonly COLOR_TAB_ICON_BORDER_IDLE: string = 'rgba(255,255,255,0.26)'  // 未选中：图标圆角描边
+  static readonly COLOR_TAB_TEXT_ACTIVE: string = '#FFF7E8'                      // 选中：暖白文字
+  static readonly COLOR_TAB_TEXT_IDLE: string = 'rgba(255,255,255,0.55)'         // 未选中：55% 白
+  static readonly OPACITY_TAB_IDLE: number = 0.55                                // 未选中：图标同 55% 白
+  /** 选中金胶囊：中金 ↔ 深金竖向渐变，白色图元与暖白文字压得住，且与深色导航条拉开层次 */
+  static readonly COLOR_TAB_CAPSULE_TOP: string = '#CDA55E'
+  static readonly COLOR_TAB_CAPSULE_BOTTOM: string = '#B08544'
 
   // ==================== 首页字号（与登录页同一套字级规范）====================
   static readonly FONT_GREETING: number = 20         // 问候语「欢迎回家，房号 2006」（占一行）
@@ -110,6 +115,8 @@ export class CommonConstants {
   static readonly NIGHT_BANNER_HEIGHT: number = 56   // 晚安模式通栏横幅高度
   static readonly TABBAR_HEIGHT: number = 56         // 底部悬浮导航高度
   static readonly TABBAR_RADIUS: number = 24         // 导航条圆角
+  static readonly TAB_CAPSULE_HEIGHT: number = 44    // 导航项高（导航条内上下各留 6，选中金胶囊不顶边）
+  static readonly TAB_CAPSULE_RADIUS: number = 22    // 导航项圆角（取高度一半，即正胶囊）
   static readonly TABBAR_SIDE_MARGIN: number = 18    // 导航条左右留白（不占满）
   static readonly TABBAR_BOTTOM_MARGIN: number = 8   // 导航条距屏幕底部
   static readonly HOME_BOTTOM_CLEARANCE: number = 76 // 内容区避让悬浮导航的底部留白

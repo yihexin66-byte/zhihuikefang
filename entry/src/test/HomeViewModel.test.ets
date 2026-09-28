@@ -281,6 +281,20 @@ export default function homeViewModelTest() {
       expect(viewModel.navTabs[3].label).assertEqual('服务')
     })
 
+    it('底部导航_四项均配图标', 0, () => {
+      const viewModel: HomeViewModel = new HomeViewModel()
+      let iconCount: number = 0
+
+      for (const item of viewModel.navTabs) {
+        if (item.icon !== undefined) {
+          iconCount++
+        }
+      }
+
+      // 首页 home_tab / 灯光 light_tab / 窗帘 curtain_tab / 服务 service_tab 四项齐备
+      expect(iconCount).assertEqual(4)
+    })
+
     it('底部导航_切换选中项', 0, () => {
       const viewModel: HomeViewModel = new HomeViewModel()
       viewModel.switchTab(2)
