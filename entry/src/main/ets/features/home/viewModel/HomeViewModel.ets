@@ -11,7 +11,7 @@ import { HomeDefaults, HomeRouteParams, NavTabItem, SceneModeItem } from '../mod
 export class HomeViewModel {
   // ==================== 页面文案（固定，一字不改）====================
   /** 右上角标签 */
-  readonly testTag: string = '开始测试'
+  readonly testTag: string = '肖总测试'
   /** 问候语前缀：与房号组合为「欢迎回家，房号 XXXX」 */
   readonly greetingPrefix: string = '欢迎回家，'
   /** 房号前缀：与 @Trace roomNo 组合为「房号 XXXX」 */
