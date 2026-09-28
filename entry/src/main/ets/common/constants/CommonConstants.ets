@@ -76,14 +76,19 @@ export class CommonConstants {
   static readonly COLOR_TAG_BG_OFF: string = 'rgba(255,255,255,0.08)'
   static readonly COLOR_TAG_BORDER_OFF: string = 'rgba(255,255,255,0.20)'
 
-  /** 底部悬浮导航：圆角描边胶囊，左右不占满 */
+  /**
+   * 底部悬浮导航：圆角描边胶囊，左右不占满
+   * 选中态 = 金色胶囊 + 白色图标 + 暖白文字；未选中态 = 图标与文字同为 55% 白，尺寸不变，
+   * 两者仅靠胶囊底色区分（不做缩放、不加描边）
+   */
   static readonly COLOR_TABBAR_BG: string = 'rgba(28,19,8,0.84)'                 // 导航条底
   static readonly COLOR_TABBAR_BORDER: string = 'rgba(239,216,148,0.24)'         // 导航条描边
-  static readonly COLOR_TAB_TEXT_ACTIVE: string = '#FFF7E8'                      // 选中：暖白
-  static readonly COLOR_TAB_TEXT_IDLE: string = 'rgba(255,255,255,0.58)'         // 未选中：浅灰白
-  static readonly COLOR_TAB_HIGHLIGHT: string = 'rgba(239,216,148,0.14)'         // 选中：微弱高亮底
-  static readonly COLOR_TAB_ICON_BORDER: string = 'rgba(239,216,148,0.70)'       // 选中：图标圆角描边
-  static readonly COLOR_TAB_ICON_BORDER_IDLE: string = 'rgba(255,255,255,0.26)'  // 未选中：图标圆角描边
+  static readonly COLOR_TAB_TEXT_ACTIVE: string = '#FFF7E8'                      // 选中：暖白文字
+  static readonly COLOR_TAB_TEXT_IDLE: string = 'rgba(255,255,255,0.55)'         // 未选中：55% 白
+  static readonly OPACITY_TAB_IDLE: number = 0.55                                // 未选中：图标同 55% 白
+  /** 选中金胶囊：中金 ↔ 深金竖向渐变，白色图元与暖白文字压得住，且与深色导航条拉开层次 */
+  static readonly COLOR_TAB_CAPSULE_TOP: string = '#CDA55E'
+  static readonly COLOR_TAB_CAPSULE_BOTTOM: string = '#B08544'
 
   // ==================== 首页字号（与登录页同一套字级规范）====================
   static readonly FONT_GREETING: number = 20         // 问候语「欢迎回家，房号 2006」（占一行）
@@ -93,7 +98,8 @@ export class CommonConstants {
   static readonly FONT_TEMP_CURRENT: number = 30     // 当前温度数值（金色大字）
   static readonly FONT_TEMP_SET: number = 19         // 设定温度数值
   static readonly FONT_TEMP_UNIT: number = 13        // 温度单位 °C
-  static readonly FONT_TINY: number = 11             // 卡片内说明文字 / 场景与服务项文案
+  static readonly FONT_TINY: number = 11             // 卡片内说明文字 / 服务项文案
+  static readonly FONT_SCENE_CARD: number = 13       // 场景卡片文案（图标居左、文案居右，比原 11 略大一档）
   static readonly FONT_TAB: number = 11              // 底部导航文字
   static readonly FONT_TAG: number = 11              // 小标签文字
 
@@ -110,6 +116,8 @@ export class CommonConstants {
   static readonly NIGHT_BANNER_HEIGHT: number = 56   // 晚安模式通栏横幅高度
   static readonly TABBAR_HEIGHT: number = 56         // 底部悬浮导航高度
   static readonly TABBAR_RADIUS: number = 24         // 导航条圆角
+  static readonly TAB_CAPSULE_HEIGHT: number = 44    // 导航项高（导航条内上下各留 6，选中金胶囊不顶边）
+  static readonly TAB_CAPSULE_RADIUS: number = 22    // 导航项圆角（取高度一半，即正胶囊）
   static readonly TABBAR_SIDE_MARGIN: number = 18    // 导航条左右留白（不占满）
   static readonly TABBAR_BOTTOM_MARGIN: number = 8   // 导航条距屏幕底部
   static readonly HOME_BOTTOM_CLEARANCE: number = 76 // 内容区避让悬浮导航的底部留白
@@ -184,7 +192,6 @@ export class CommonConstants {
   static readonly CURTAIN_ROD_RATIO: number = 19.3       // 窗帘杆图元宽高比（curtain_icon_top_bar 655:34）
   static readonly CURTAIN_PANEL_CLOSED_PCT: number = 50  // 关闭态单侧帘宽（占预览区宽度）：两半在中间合拢
   static readonly CURTAIN_PANEL_OPEN_PCT: number = 44    // 打开态单侧帘宽（占预览区宽度）：两半收向两侧留出中缝
-  static readonly CURTAIN_PANEL_SLIDE_PCT: number = 5    // 开合过程中帘体向外滑动位移（占预览区宽度）
 
   // ==================== 窗帘控制页字号 ====================
   static readonly FONT_CURTAIN_TITLE: number = 24        // 页面标题「窗帘控制」

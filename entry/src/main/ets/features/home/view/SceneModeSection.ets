@@ -1,6 +1,6 @@
 /**
  * 场景模式（子组件）：明亮 / 柔和 / 阅读 / 温馨 四张圆角金色卡片，2×2 排布
- * 视觉：四张卡均为鎏金渐变常亮；选中态提亮并加亮金描边，与灯光控制页同名场景保持同步
+ * 视觉：四张卡均为鎏金渐变常亮；卡内左半区放图标、右半区放文案（左右各半，比例均衡）
  * 交互：单选互斥（点击未开启的卡开启，再次点击已开启的卡关闭），每次点击弹出开启 / 关闭轻提示
  */
 import { BusinessError } from '@kit.BasicServicesKit'
@@ -9,7 +9,7 @@ import { SceneModeItem } from '../model/HomeModel'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 
 /**
- * 单张场景卡：鎏金渐变底 + 图标 + 文案；选中态提亮 + 亮金描边
+ * 单张场景卡：鎏金渐变底 + 左图标 / 右文案；选中态提亮 + 亮金描边
  */
 @ComponentV2
 struct SceneModeCard {
@@ -36,22 +36,30 @@ struct SceneModeCard {
           ? CommonConstants.COLOR_GOLD_HIGHLIGHT
           : Color.Transparent)
 
-      Column() {
-        Image(this.item.icon)
-          .width(CommonConstants.ICON_SCENE)
-          .height(CommonConstants.ICON_SCENE)
-          .objectFit(ImageFit.Contain)
+      // 左半区：图标居中；右半区：文案左对齐 —— 左右各占一半，图元与文案视觉配重均衡
+      Row() {
+        Column() {
+          Image(this.item.icon)
+            .width(CommonConstants.ICON_SCENE)
+            .height(CommonConstants.ICON_SCENE)
+            .objectFit(ImageFit.Contain)
+        }
+        .layoutWeight(1)
+        .height('100%')
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
 
         Text(this.item.label)
-          .fontSize(CommonConstants.FONT_TINY)
+          .fontSize(CommonConstants.FONT_SCENE_CARD)
           .fontWeight(FontWeight.Medium)
           .fontColor(CommonConstants.COLOR_GOLD_TEXT)
-          .margin({ top: 3 })
+          .maxLines(1)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
+          .layoutWeight(1)
       }
       .width('100%')
       .height('100%')
-      .alignItems(HorizontalAlign.Center)
-      .justifyContent(FlexAlign.Center)
+      .alignItems(VerticalAlign.Center)
     }
     .layoutWeight(1)
     .height(CommonConstants.SCENE_CARD_HEIGHT)

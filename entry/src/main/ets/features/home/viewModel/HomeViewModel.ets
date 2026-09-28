@@ -11,7 +11,7 @@ import { HomeDefaults, HomeRouteParams, NavTabItem, SceneModeItem } from '../mod
 export class HomeViewModel {
   // ==================== 页面文案（固定，一字不改）====================
   /** 右上角标签 */
-  readonly testTag: string = '开始测试'
+  readonly testTag: string = '肖总测试'
   /** 问候语前缀：与房号组合为「欢迎回家，房号 XXXX」 */
   readonly greetingPrefix: string = '欢迎回家，'
   /** 房号前缀：与 @Trace roomNo 组合为「房号 XXXX」 */
@@ -47,13 +47,16 @@ export class HomeViewModel {
     SceneModeItem.of('warm', '温馨模式', $r('app.media.home_icon_warm'))
   ]
 
-  /** 底部导航四项：灯光 / 窗帘有金色图标，首页与服务暂无图标资源，仅展示文字占位 */
+  /**
+   * 底部导航四项：首页 / 灯光 / 窗帘 / 服务
+   * 四个导航图元（home_tab / light_tab / curtain_tab / service_tab）均为白色实心图元 + 透明底，
+   * 由导航条按选中态统一着色，图标资源本身不带配色
+   */
   readonly navTabs: NavTabItem[] = [
-    NavTabItem.of('首页', undefined),
-    NavTabItem.of('灯光', $r('app.media.light_icon_nav_light')),
-    // 窗帘暂无专用导航图元，沿用窗帘页设计稿里的帘体图形（两片平铺帘，语义即「窗帘」）
-    NavTabItem.of('窗帘', $r('app.media.curtain_icon_close_all')),
-    NavTabItem.of('服务', undefined)
+    NavTabItem.of('首页', $r('app.media.home_tab')),
+    NavTabItem.of('灯光', $r('app.media.light_tab')),
+    NavTabItem.of('窗帘', $r('app.media.curtain_tab')),
+    NavTabItem.of('服务', $r('app.media.service_tab'))
   ]
 
   // ==================== 页面状态（@Trace：变更实时联动 UI）====================

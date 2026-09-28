@@ -1,7 +1,8 @@
 /**
  * 底部导航（子组件）：全 App 统一的四项导航 —— 首页 / 灯光 / 窗帘 / 服务
  * 形态：悬浮在页面最底部，左右不占满的圆角描边胶囊；Tabs 自带导航条高度置 0，由自绘导航条承担选中态
- * 选中态：暖白加粗文字 + 暖金图标（圆角描边）+ 微弱高亮底色；未选中态：浅灰白常规字重、无高亮
+ * 选中态：金色胶囊底 + 白色图标 + 暖白文字（图标与文字同时转白，不做缩放、不加描边）
+ * 未选中态：图标与文字同为 55% 白，尺寸不变，仅靠无胶囊底区分
  * 内容：首页 / 灯光 / 窗帘 / 服务 四个 TabContent 分别接入四个主页面
  */
 import { CommonConstants } from '../../../common/constants/CommonConstants'
@@ -11,8 +12,8 @@ import { ServicePage } from '../../service/view/ServicePage'
 import { HomeViewModel } from '../viewModel/HomeViewModel'
 
 /**
- * 单个导航项：图标（可选）+ 文字，选中 / 未选中两套配色
- * 暂无图标资源的项仅展示文字，后续补齐图标直接传入即可
+ * 单个导航项：图标 + 文字，选中 / 未选中两套配色
+ * 图标统一按 alpha 通道着白色（renderMode.Template），因此图标资源本身是什么颜色都不影响观感
  */
 @ComponentV2
 struct NavTabButton {
@@ -25,25 +26,18 @@ struct NavTabButton {
 
   build() {
     Column() {
-      // 图标：选中暖金（保留原色），未选中转为浅灰白；无图标的项不渲染
+      // 图标：模板着色统一转白，未选中降到 55% 白（与文字同透明度）
       if (this.icon !== undefined) {
         Image(this.icon)
           .width(CommonConstants.ICON_TAB)
           .height(CommonConstants.ICON_TAB)
           .objectFit(ImageFit.Contain)
-          .padding(2)
-          .borderRadius(9)
-          .border({
-            width: 1,
-            color: this.selected
-              ? CommonConstants.COLOR_TAB_ICON_BORDER
-              : CommonConstants.COLOR_TAB_ICON_BORDER_IDLE
-          })
-          .grayscale(this.selected ? 0 : 1)
-          .brightness(this.selected ? 1 : 1.2)
+          .renderMode(ImageRenderMode.Template)
+          .fillColor(Color.White)
+          .opacity(this.selected ? 1 : CommonConstants.OPACITY_TAB_IDLE)
       }
 
-      // 文字：选中暖白加粗，未选中浅灰白常规
+      // 文字：选中暖白加粗，未选中 55% 白常规字重
       Text(this.label)
         .fontSize(CommonConstants.FONT_TAB)
         .fontWeight(this.selected ? FontWeight.Bold : FontWeight.Normal)
@@ -53,12 +47,18 @@ struct NavTabButton {
         .margin({ top: 2 })
     }
     .layoutWeight(1)
-    .height('100%')
+    .height(CommonConstants.TAB_CAPSULE_HEIGHT)
     .alignItems(HorizontalAlign.Center)
     .justifyContent(FlexAlign.Center)
-    .borderRadius(18)
-    // 微弱高亮底色：仅选中态
-    .backgroundColor(this.selected ? CommonConstants.COLOR_TAB_HIGHLIGHT : Color.Transparent)
+    .borderRadius(CommonConstants.TAB_CAPSULE_RADIUS)
+    // 选中态金胶囊：未选中态渐变整体透明，等价于无底色
+    .linearGradient({
+      direction: GradientDirection.Bottom,
+      colors: [
+        [this.selected ? CommonConstants.COLOR_TAB_CAPSULE_TOP : Color.Transparent, 0],
+        [this.selected ? CommonConstants.COLOR_TAB_CAPSULE_BOTTOM : Color.Transparent, 1]
+      ]
+    })
     .onClick(() => {
       this.onTap()
     })
@@ -172,7 +172,7 @@ export struct HomeBottomTabs {
           })
         }
 
-        // 4. 服务（待接入）
+        // 4. 服务：服务控制页（本屏）；返回按钮切回首页
         TabContent() {
           ServicePage({
             onBack: () => {

@@ -4,6 +4,7 @@
  * 智慧客房首页与灯光控制页共用同一个实例：
  *  1. 场景模式：任一页选中 / 取消，另一页实时联动；
  *  2. 9 路独立开关与总开关：首页场景卡与灯光页开关读写同一份状态；
+ *     总开关的亮灭规则为「9 路全部开启才亮」——单开一路或多路（未全开）均不点亮；
  *  3. 场景与开关的对应关系在 toggleScene 内统一落地 —— 无论从首页还是灯光页触发，
  *     选中场景即打开对应开关、取消选中即关闭对应开关。
  *
@@ -23,7 +24,7 @@ export class RoomStateStore {
    */
   @Trace selectedSceneId: string = RoomLightDefaults.NO_SCENE
 
-  /** 总开关：默认关闭；任一独立开关开启即为开，全部关闭即为关 */
+  /** 总开关：默认关闭；9 路全部开启才为开，只要有一路关闭即为关 */
   @Trace mainSwitchOn: boolean = RoomLightDefaults.MAIN_SWITCH_OFF
 
   /** 9 路独立控制项：开关状态默认全部关闭 */
@@ -123,7 +124,7 @@ export class RoomStateStore {
 
   /**
    * 单路开关：由 Row 内的开关回传目标状态
-   * 变更后按「全部关闭 = 关，任一开启 = 开」联动总开关
+   * 变更后按「9 路全部开启 = 开，任一路未开 = 关」联动总开关
    */
   setControl(id: string, on: boolean): void {
     const item: LightControlItem | undefined = this.findControl(id)
@@ -142,16 +143,19 @@ export class RoomStateStore {
     this.mainSwitchOn = RoomLightDefaults.MAIN_SWITCH_OFF
   }
 
-  /** 总开关联动：任一独立开关开启则总开关为开，全部关闭则总开关为关 */
+  /**
+   * 总开关联动：9 路全部开启则总开关为开；只要有一路关闭（含全部关闭）即为关
+   * 因此单开一路不会点亮总开关，必须「全部打开」才亮
+   */
   private syncMainSwitch(): void {
-    let anyOn: boolean = false
+    let allOn: boolean = true
     for (const item of this.controls) {
-      if (item.on) {
-        anyOn = true
+      if (!item.on) {
+        allOn = false
         break
       }
     }
-    this.mainSwitchOn = anyOn
+    this.mainSwitchOn = allOn
   }
 
   /** 按 id 查找独立控制项：未命中返回 undefined，由调用方窄化 */

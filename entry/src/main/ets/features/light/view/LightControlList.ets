@@ -106,9 +106,13 @@ export struct LightControlList {
       this.cellRow(this.viewModel.roomState.controls[2], this.viewModel.roomState.controls[3])
       this.cellRow(this.viewModel.roomState.controls[4], this.viewModel.roomState.controls[5])
       this.cellRow(this.viewModel.roomState.controls[6], this.viewModel.roomState.controls[7])
+      // 末行只有廊灯：右半区用等宽空位占位（不可用 Blank —— 它会让格子撑满整行，
+      // 开关随之滑到卡片最右侧，与上方主灯 / 落地灯所在的左列错开）
       Row({ space: CommonConstants.LIGHT_GRID_GAP }) {
         this.cell(this.viewModel.roomState.controls[8])
-        Blank()
+        Column()
+          .layoutWeight(1)
+          .height('100%')
       }
       .width('100%')
       .height(CommonConstants.LIGHT_CELL_HEIGHT)
