@@ -98,7 +98,8 @@ export class CommonConstants {
   static readonly FONT_TEMP_CURRENT: number = 30     // 当前温度数值（金色大字）
   static readonly FONT_TEMP_SET: number = 19         // 设定温度数值
   static readonly FONT_TEMP_UNIT: number = 13        // 温度单位 °C
-  static readonly FONT_TINY: number = 11             // 卡片内说明文字 / 场景与服务项文案
+  static readonly FONT_TINY: number = 11             // 卡片内说明文字 / 服务项文案
+  static readonly FONT_SCENE_CARD: number = 13       // 场景卡片文案（图标居左、文案居右，比原 11 略大一档）
   static readonly FONT_TAB: number = 11              // 底部导航文字
   static readonly FONT_TAG: number = 11              // 小标签文字
 
