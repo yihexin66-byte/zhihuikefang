@@ -1,6 +1,6 @@
 /**
  * 灯光控制页 ViewModel 单元测试
- * 覆盖：默认状态、总开关全开/全关、9 路开关与总开关双向联动、
+ * 覆盖：默认状态、总开关全开/全关、9 路开关与总开关联动（总开关只在 9 路全开时点亮）、
  *       场景胶囊单选互斥与取消、场景与独立开关的对应联动（含睡眠模式）、
  *       以及与首页同名场景 / 灯光开关的双向同步
  */
@@ -125,50 +125,69 @@ export default function lightViewModelTest() {
       expect(countOn(viewModel.roomState.controls)).assertEqual(9)
     })
 
-    // ==================== 独立开关与总开关联动 ====================
+    // ==================== 独立开关与总开关联动（总开关只在 9 路全开时点亮）====================
 
-    it('独立开关_单路开启_总开关联动为开', 0, () => {
+    it('独立开关_单路开启_总开关不点亮（未全部打开）', 0, () => {
       const viewModel: LightViewModel = new LightViewModel()
       viewModel.setControl(RoomLightDefaults.LIGHT_DESK, true)
 
       expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_DESK)).assertTrue()
-      expect(viewModel.mainSwitchOn).assertTrue()
-      expect(viewModel.mainSwitchStateText).assertEqual('全开')
-    })
-
-    it('独立开关_唯二开启后关其一_总开关仍为开', 0, () => {
-      const viewModel: LightViewModel = new LightViewModel()
-      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, true)
-      viewModel.setControl(RoomLightDefaults.LIGHT_FAN, true)
-      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, false)
-
-      expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_MAIN)).assertFalse()
-      expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_FAN)).assertTrue()
-      expect(viewModel.mainSwitchOn).assertTrue()
-    })
-
-    it('独立开关_最后一盏关闭_总开关联动为关', 0, () => {
-      const viewModel: LightViewModel = new LightViewModel()
-      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, true)
-      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, false)
-
       expect(viewModel.mainSwitchOn).assertFalse()
       expect(viewModel.mainSwitchStateText).assertEqual('全关')
     })
 
-    it('独立开关_全开时逐路关闭_总开关在最后一盏关闭时才为关', 0, () => {
+    it('独立开关_九路全部开启_总开关点亮', 0, () => {
       const viewModel: LightViewModel = new LightViewModel()
-      viewModel.toggleMainSwitch()
-
-      viewModel.setControl(RoomLightDefaults.LIGHT_WARDROBE, false)
-      expect(viewModel.mainSwitchOn).assertTrue()
-
-      viewModel.setControl(RoomLightDefaults.LIGHT_FAN, false)
-      expect(viewModel.mainSwitchOn).assertTrue()
-
       for (const item of viewModel.roomState.controls) {
-        viewModel.setControl(item.id, false)
+        viewModel.setControl(item.id, true)
       }
+
+      expect(countOn(viewModel.roomState.controls)).assertEqual(9)
+      expect(viewModel.mainSwitchOn).assertTrue()
+      expect(viewModel.mainSwitchStateText).assertEqual('全开')
+    })
+
+    it('独立开关_九路全开后再关一路_总开关立即熄灭', 0, () => {
+      const viewModel: LightViewModel = new LightViewModel()
+      for (const item of viewModel.roomState.controls) {
+        viewModel.setControl(item.id, true)
+      }
+      expect(viewModel.mainSwitchOn).assertTrue()
+
+      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, false)
+
+      expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_MAIN)).assertFalse()
+      expect(viewModel.mainSwitchOn).assertFalse()
+    })
+
+    it('独立开关_既非全开也非全关_总开关始终为关', 0, () => {
+      const viewModel: LightViewModel = new LightViewModel()
+      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, true)
+      viewModel.setControl(RoomLightDefaults.LIGHT_FAN, true)
+      expect(viewModel.mainSwitchOn).assertFalse()
+
+      viewModel.setControl(RoomLightDefaults.LIGHT_MAIN, false)
+
+      expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_MAIN)).assertFalse()
+      expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_FAN)).assertTrue()
+      expect(viewModel.mainSwitchOn).assertFalse()
+    })
+
+    it('独立开关_逐路开启到最后一盏_总开关才点亮', 0, () => {
+      const viewModel: LightViewModel = new LightViewModel()
+      const controls: LightControlItem[] = viewModel.roomState.controls
+
+      for (let index = 0; index < controls.length; index++) {
+        viewModel.setControl(controls[index].id, true)
+        // 前 8 路打开时总开关应保持熄灭，最后一路打开才点亮
+        if (index < controls.length - 1) {
+          expect(viewModel.mainSwitchOn).assertFalse()
+        }
+      }
+      expect(viewModel.mainSwitchOn).assertTrue()
+
+      // 从全开状态关掉任意一路，总开关同步熄灭
+      viewModel.setControl(controls[0].id, false)
       expect(viewModel.mainSwitchOn).assertFalse()
     })
 
@@ -178,7 +197,9 @@ export default function lightViewModelTest() {
       viewModel.setControl(RoomLightDefaults.LIGHT_FLOOR, true)
 
       expect(isOn(viewModel.roomState.controls, RoomLightDefaults.LIGHT_FLOOR)).assertTrue()
-      expect(viewModel.mainSwitchOn).assertTrue()
+      expect(countOn(viewModel.roomState.controls)).assertEqual(1)
+      // 仅开一路，总开关仍为关
+      expect(viewModel.mainSwitchOn).assertFalse()
     })
 
     it('独立开关_未知 id_不响应且不影响总开关', 0, () => {
@@ -187,6 +208,15 @@ export default function lightViewModelTest() {
 
       expect(viewModel.mainSwitchOn).assertFalse()
       expect(countOn(viewModel.roomState.controls)).assertEqual(0)
+
+      // 全部开启后再传未知 id：总开关保持点亮，九路状态不受影响
+      for (const item of viewModel.roomState.controls) {
+        viewModel.setControl(item.id, true)
+      }
+      viewModel.setControl('unknown', false)
+
+      expect(viewModel.mainSwitchOn).assertTrue()
+      expect(countOn(viewModel.roomState.controls)).assertEqual(9)
     })
 
     // ==================== 场景模式：单选互斥与取消 ====================
@@ -245,7 +275,8 @@ export default function lightViewModelTest() {
       expect(isOn(controls, RoomLightDefaults.LIGHT_READ_RIGHT)).assertFalse()
       expect(isOn(controls, RoomLightDefaults.LIGHT_FAN)).assertFalse()
 
-      expect(viewModel.mainSwitchOn).assertTrue()
+      // 明亮模式只开 5 路，未全部打开，总开关不点亮
+      expect(viewModel.mainSwitchOn).assertFalse()
     })
 
     it('明亮模式_取消时关闭对应开关', 0, () => {
@@ -370,7 +401,8 @@ export default function lightViewModelTest() {
       expect(isOn(controls, RoomLightDefaults.LIGHT_FLOOR)).assertFalse()
       expect(isOn(controls, RoomLightDefaults.LIGHT_CORRIDOR)).assertFalse()
       expect(countOn(controls)).assertEqual(6)
-      expect(viewModel.mainSwitchOn).assertTrue()
+      // 全开状态下取消柔和模式关掉 3 路，已不再全开，总开关同步熄灭
+      expect(viewModel.mainSwitchOn).assertFalse()
     })
 
     // ==================== 与首页同名场景 / 灯光开关的双向同步 ====================
@@ -402,7 +434,8 @@ export default function lightViewModelTest() {
       expect(isOn(controls, RoomLightDefaults.LIGHT_WALL)).assertTrue()
       expect(isOn(controls, RoomLightDefaults.LIGHT_FLOOR)).assertTrue()
       expect(isOn(controls, RoomLightDefaults.LIGHT_CORRIDOR)).assertTrue()
-      expect(light.mainSwitchOn).assertTrue()
+      // 柔和模式仅开 3 路，总开关不点亮
+      expect(light.mainSwitchOn).assertFalse()
     })
 
     it('共享状态_首页取消场景_灯光页对应开关同步关闭', 0, () => {
