@@ -182,8 +182,12 @@ export class CommonConstants {
   static readonly COLOR_CURTAIN_SCRIM_MID: string = 'rgba(38,25,10,0.24)'
   static readonly COLOR_CURTAIN_SCRIM_BOTTOM: string = 'rgba(38,25,10,0.70)'
 
-  /** 顶部「全部打开 / 全部关闭」胶囊：选中态用设计稿金色胶囊底图，未选中态沿用半透卡片材质 */
-  static readonly COLOR_CURTAIN_MODE_BORDER_OFF: string = 'rgba(255,244,214,0.26)'  // 未选中：弱金描边
+  /**
+   * 顶部「全部打开 / 全部关闭」胶囊：未选中态填充与描边统一用淡金（同族对齐，不再是暗底配弱金边）；
+   * 选中态用设计稿金色胶囊底图 + 亮金描边。色值与灯光页淡金高亮 / 淡金描边同一族。
+   */
+  static readonly COLOR_CURTAIN_MODE_FILL: string = 'rgba(239,216,148,0.16)'        // 未选中：淡金填充
+  static readonly COLOR_CURTAIN_MODE_BORDER: string = 'rgba(239,216,148,0.52)'      // 未选中：淡金描边（与填充同族）
   static readonly OPACITY_CURTAIN_MODE_IDLE: number = 0.90                          // 未选中：图元与文字略降饱和
   static readonly CURTAIN_MODE_BORDER_WIDTH_ON: number = 2                          // 选中：描边加粗（压住金色底图边缘）
 
@@ -215,8 +219,11 @@ export class CommonConstants {
   static readonly CURTAIN_BTN_LABEL_GAP: number = 4      // 圆形按钮与下方文案间距
 
   // ==================== 窗帘开合动画 ====================
-  /** 开合动画时长：帘体缓缓移动，过渡丝滑（暂停后保持当前位置） */
-  static readonly CURTAIN_MOTION_DURATION: number = 1500
+  /**
+   * 开合动画时长：由 1500 放慢到 2000，帘体移动更从容；配合 ease-in-out 缓入缓出
+   * （起步与收尾都减速），交叉淡入淡出的过渡观感更丝滑。暂停后保持当前位置不变。
+   */
+  static readonly CURTAIN_MOTION_DURATION: number = 2000
 
   // ==================== 服务控制页：暖金实景上的淡金服务卡 ====================
   /** 背景压暗遮罩：顶部压暗保标题可读，中部留出暖金光晕，底部压暗衬托悬浮导航 */
