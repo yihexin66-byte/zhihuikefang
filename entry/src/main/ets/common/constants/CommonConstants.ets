@@ -215,8 +215,11 @@ export class CommonConstants {
   static readonly CURTAIN_BTN_LABEL_GAP: number = 4      // 圆形按钮与下方文案间距
 
   // ==================== 窗帘开合动画 ====================
-  /** 开合动画时长：帘体缓缓移动，过渡丝滑（暂停后保持当前位置） */
-  static readonly CURTAIN_MOTION_DURATION: number = 1500
+  /**
+   * 开合动画时长：由 1500 放慢到 2000，帘体移动更从容；配合 ease-in-out 缓入缓出
+   * （起步与收尾都减速），交叉淡入淡出的过渡观感更丝滑。暂停后保持当前位置不变。
+   */
+  static readonly CURTAIN_MOTION_DURATION: number = 2000
 
   // ==================== 服务控制页：暖金实景上的淡金服务卡 ====================
   /** 背景压暗遮罩：顶部压暗保标题可读，中部留出暖金光晕，底部压暗衬托悬浮导航 */
