@@ -182,8 +182,12 @@ export class CommonConstants {
   static readonly COLOR_CURTAIN_SCRIM_MID: string = 'rgba(38,25,10,0.24)'
   static readonly COLOR_CURTAIN_SCRIM_BOTTOM: string = 'rgba(38,25,10,0.70)'
 
-  /** 顶部「全部打开 / 全部关闭」胶囊：选中态用设计稿金色胶囊底图，未选中态沿用半透卡片材质 */
-  static readonly COLOR_CURTAIN_MODE_BORDER_OFF: string = 'rgba(255,244,214,0.26)'  // 未选中：弱金描边
+  /**
+   * 顶部「全部打开 / 全部关闭」胶囊：未选中态填充与描边统一用淡金（同族对齐，不再是暗底配弱金边）；
+   * 选中态用设计稿金色胶囊底图 + 亮金描边。色值与灯光页淡金高亮 / 淡金描边同一族。
+   */
+  static readonly COLOR_CURTAIN_MODE_FILL: string = 'rgba(239,216,148,0.16)'        // 未选中：淡金填充
+  static readonly COLOR_CURTAIN_MODE_BORDER: string = 'rgba(239,216,148,0.52)'      // 未选中：淡金描边（与填充同族）
   static readonly OPACITY_CURTAIN_MODE_IDLE: number = 0.90                          // 未选中：图元与文字略降饱和
   static readonly CURTAIN_MODE_BORDER_WIDTH_ON: number = 2                          // 选中：描边加粗（压住金色底图边缘）
 

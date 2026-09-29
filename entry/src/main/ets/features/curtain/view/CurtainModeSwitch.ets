@@ -1,6 +1,6 @@
 /**
  * 顶部胶囊切换（子组件）：全部打开 / 全部关闭，两枚等宽胶囊各占一半
- * 视觉：选中态用设计稿金色胶囊底图 + 深色图元与文字；未选中态沿用半透卡片材质 + 弱金描边
+ * 视觉：两枚胶囊的填充与描边统一用淡金（同族对齐）；选中态用设计稿金色胶囊底图提亮 + 深色图元与文字
  * 交互：默认均未选中；点击后立即切换选中态，同时驱动布帘与窗纱执行打开 / 关闭动画
  * 选中态取 ViewModel 的指令状态，单独操作布帘 / 窗纱时也会按两台设备的综合状态联动
  */
@@ -21,7 +21,7 @@ struct CurtainModePill {
 
   build() {
     Stack({ alignContent: Alignment.Center }) {
-      // 选中态底图：设计稿金色胶囊；未选中态用半透卡片材质承担，保持与灯光页同一套低饱和观感
+      // 选中态底图：设计稿金色胶囊；未选中态用淡金填充承担，与淡金描边同族对齐
       if (this.selected) {
         Image($r('app.media.curtain_btn_all_open_or_close_selected_bg'))
           .width('100%')
@@ -58,12 +58,12 @@ struct CurtainModePill {
     .layoutWeight(1)
     .height(CommonConstants.CURTAIN_MODE_HEIGHT)
     .borderRadius(CommonConstants.CURTAIN_MODE_HEIGHT / 2)
-    .backgroundColor(this.selected ? Color.Transparent : CommonConstants.COLOR_LIGHT_CARD_BG)
+    .backgroundColor(this.selected ? Color.Transparent : CommonConstants.COLOR_CURTAIN_MODE_FILL)
     .border({
       width: this.selected ? CommonConstants.CURTAIN_MODE_BORDER_WIDTH_ON : 1,
       color: this.selected
         ? CommonConstants.COLOR_GOLD_LIGHT
-        : CommonConstants.COLOR_CURTAIN_MODE_BORDER_OFF
+        : CommonConstants.COLOR_CURTAIN_MODE_BORDER
     })
     .clip(true)
     .onClick(() => {
